@@ -81,8 +81,21 @@ jobs:
                        /usr/lib/x86_64-linux-gnu/libgdiplus.so
           fi
 
+      - name: Verify libgdiplus install (diagnostic)
+        run: |
+          ls -la /usr/lib/x86_64-linux-gnu/libgdiplus* || true
+          ldconfig -p | grep -i gdiplus || echo "no gdiplus in ld cache"
+
       - run: pip install -e ".[dev]"
 
       # Real groupdocs.viewer renders a real DOCX through the full HTTP stack —
       # verbose so failures pinpoint which endpoint regressed.
+      #
+      # DOTNET_SYSTEM_DRAWING_ENABLE_UNIX_SUPPORT is REQUIRED on .NET 6+:
+      # System.Drawing.Common is Windows-only by default and refuses to load
+      # libgdiplus on Linux without this opt-in switch. Without it the install
+      # above is moot — Gdip's type initializer throws regardless of whether
+      # libgdiplus is dlopen-able. See https://aka.ms/systemdrawingnonwindows
       - run: pytest tests/test_e2e.py -v
+        env:
+          DOTNET_SYSTEM_DRAWING_ENABLE_UNIX_SUPPORT: "true"

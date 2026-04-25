@@ -265,8 +265,15 @@ class SelfHostViewer:
                 # Stubs only enumerate the stream-factory overload of PngViewOptions;
                 # the string-template form works at runtime.
                 opts = PngViewOptions(page_tpl)  # type: ignore[arg-type]
-                if kind == "thumb":
-                    opts.width = self._thumb_width
+                # NOTE: we deliberately do NOT set `max_width` / `width` for
+                # thumbnails. Either property triggers a post-render resize
+                # through System.Drawing.Common, which is fully removed for
+                # non-Windows in the .NET 10 runtime that groupdocs.viewer 26.x
+                # bundles (the `EnableUnixSupport` switch from .NET 6 is gone).
+                # Render at native page size and let the SPA scale via CSS —
+                # bigger thumb bytes but works on every platform. If thumb
+                # bandwidth becomes a problem, post-process with Pillow.
+                # `self._thumb_width` is intentionally unused here as a result.
 
             with self._open(creds, data) as v:
                 v.view(opts, list(page_numbers))

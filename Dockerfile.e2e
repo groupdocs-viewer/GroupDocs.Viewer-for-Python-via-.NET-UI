@@ -1,0 +1,22 @@
+# Throwaway image for running e2e tests inside the production runtime.
+# Layered on top of the production image so Linux deps + the env var fix
+# match exactly what shipped users get.
+#
+# Usage (from repo root):
+#   docker build -t groupdocs-viewer-ui:e2e-test .
+#   docker build -f Dockerfile.e2e --build-context tests=./tests \
+#                -t groupdocs-viewer-ui:e2e-runner .
+#   docker run --rm groupdocs-viewer-ui:e2e-runner
+#
+# The `--build-context tests=./tests` is required because the repo's
+# .dockerignore excludes `tests/` from the production build context. The
+# named build context bypasses that filter for this image only.
+
+FROM groupdocs-viewer-ui:e2e-test
+
+RUN pip install --no-cache-dir pytest pytest-asyncio
+
+COPY --from=tests . /app/tests
+
+ENTRYPOINT []
+CMD ["pytest", "tests/test_e2e.py", "-v"]

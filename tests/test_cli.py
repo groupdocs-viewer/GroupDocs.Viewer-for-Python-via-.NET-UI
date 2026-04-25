@@ -14,7 +14,11 @@ def test_serve_rejects_bad_files_dir(tmp_path):
     bogus = tmp_path / "does-not-exist"
     result = CliRunner().invoke(cli, ["serve", "--files", str(bogus)])
     assert result.exit_code == 1
-    assert "is not a directory" in (result.stderr or result.stdout)
+    # Use ``result.output`` rather than ``result.stderr`` — old click (which
+    # ships on Python 3.9 envs) raises ValueError on ``.stderr`` when it
+    # wasn't captured separately, while newer click returns "". With the
+    # default mixed-output mode, stderr lines land in ``output``.
+    assert "is not a directory" in result.output
 
 
 def test_serve_rejects_bad_rendering_mode(tmp_path):
@@ -22,7 +26,7 @@ def test_serve_rejects_bad_rendering_mode(tmp_path):
         cli, ["serve", "--files", str(tmp_path), "--rendering-mode", "vector"]
     )
     assert result.exit_code == 1
-    assert "rendering-mode" in (result.stderr or result.stdout)
+    assert "rendering-mode" in result.output
 
 
 def test_help_lists_commands():
