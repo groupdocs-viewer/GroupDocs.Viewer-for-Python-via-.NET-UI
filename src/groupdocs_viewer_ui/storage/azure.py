@@ -76,7 +76,8 @@ class AzureBlobFileStorage:
         async with self._container_cm() as container:
             blob = container.get_blob_client(self._key(file_path))
             stream = await blob.download_blob()
-            return await stream.readall()
+            # azure-storage-blob's StorageStreamDownloader returns Any from readall().
+            return await stream.readall()  # type: ignore[no-any-return]
 
     async def write_file(
         self, file_name: str, data: bytes, *, rewrite: bool = False

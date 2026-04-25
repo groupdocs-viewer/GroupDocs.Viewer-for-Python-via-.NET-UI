@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import json
+from collections.abc import Awaitable, Callable
 from pathlib import Path
 from typing import Any
 
@@ -60,7 +61,9 @@ def build_window_config(config: Config) -> dict[str, Any]:
     }
 
 
-def make_index_handler(config: Config, frontend_dir: Path = FRONTEND_DIR):
+def make_index_handler(
+    config: Config, frontend_dir: Path = FRONTEND_DIR
+) -> Callable[[Request], Awaitable[HTMLResponse]]:
     """Build a Starlette handler that renders index.html with config baked in.
 
     The template is read once at startup; substitutions happen per-request

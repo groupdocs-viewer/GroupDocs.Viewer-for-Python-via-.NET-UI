@@ -10,8 +10,9 @@ from starlette.exceptions import HTTPException
 from starlette.middleware import Middleware
 from starlette.requests import Request
 from starlette.responses import JSONResponse, Response
-from starlette.routing import Mount, Route
+from starlette.routing import BaseRoute, Mount, Route
 from starlette.staticfiles import StaticFiles
+from starlette.types import ASGIApp, Receive, Scope, Send
 
 from groupdocs_viewer_ui import __version__
 from groupdocs_viewer_ui.api.routes import build_api_routes
@@ -63,11 +64,11 @@ class _AuthCheckMiddleware:
     bubbled up). Lifespan / websocket events pass through untouched.
     """
 
-    def __init__(self, app, auth_check: AuthCheck):
+    def __init__(self, app: ASGIApp, auth_check: AuthCheck) -> None:
         self.app = app
         self.auth_check = auth_check
 
-    async def __call__(self, scope, receive, send):
+    async def __call__(self, scope: Scope, receive: Receive, send: Send) -> None:
         if scope["type"] != "http":
             await self.app(scope, receive, send)
             return
@@ -110,7 +111,7 @@ def create_app(
         api_domain=config.api_domain,
     )
 
-    routes = [Route("/health", _health, methods=["GET"])]
+    routes: list[BaseRoute] = [Route("/health", _health, methods=["GET"])]
 
     ui_path = config.ui_path.rstrip("/")
     if FRONTEND_DIR.is_dir():

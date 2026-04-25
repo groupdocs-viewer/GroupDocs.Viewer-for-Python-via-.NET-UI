@@ -37,12 +37,13 @@ class RedisCache:
                     "RedisCache needs redis-py — install with "
                     "`pip install groupdocs-viewer-net-ui[redis]`."
                 ) from exc
-            client = redis.from_url(url)
+            client = redis.from_url(url)  # type: ignore[no-untyped-call]
         self._redis = client
         self._prefix = key_prefix
 
     async def try_get(self, cache_key: str, file_path: str) -> bytes | None:
-        return await self._redis.get(self._key(cache_key, file_path))
+        # redis-py is fully untyped at runtime; .get returns Any.
+        return await self._redis.get(self._key(cache_key, file_path))  # type: ignore[no-any-return]
 
     async def set(self, cache_key: str, file_path: str, data: bytes) -> None:
         await self._redis.set(self._key(cache_key, file_path), data)

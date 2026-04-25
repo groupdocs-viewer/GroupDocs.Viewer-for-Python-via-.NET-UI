@@ -20,7 +20,7 @@ import io
 import tempfile
 from collections.abc import Callable, Sequence
 from pathlib import Path
-from typing import Literal
+from typing import Any, Literal
 
 from groupdocs_viewer_ui.storage.protocol import FileStorage
 from groupdocs_viewer_ui.viewer.entities import (
@@ -143,7 +143,9 @@ class SelfHostViewer:
 
     # --- sync helpers (run in thread pool) --------------------------------
 
-    def _load_options(self, creds: FileCredentials):
+    def _load_options(self, creds: FileCredentials) -> Any:
+        # The groupdocs.viewer typing is sparse; treat its options as Any
+        # so we can set attributes the type stubs don't enumerate.
         from groupdocs.viewer.options import LoadOptions
 
         if not creds.password:
@@ -152,12 +154,14 @@ class SelfHostViewer:
         opts.password = creds.password
         return opts
 
-    def _open(self, creds: FileCredentials, data: bytes):
+    def _open(self, creds: FileCredentials, data: bytes) -> Any:
         from groupdocs.viewer import Viewer as GDViewer
 
         load = self._load_options(creds)
         stream = io.BytesIO(data)
-        return GDViewer(stream, load) if load else GDViewer(stream)
+        # The library accepts BytesIO at runtime even though its stubs say
+        # Stream | None — the stubs predate the stream-input overload.
+        return GDViewer(stream, load) if load else GDViewer(stream)  # type: ignore[arg-type]
 
     def _info_sync(self, creds: FileCredentials, data: bytes) -> DocumentInfo:
         from groupdocs.viewer.options import ViewInfoOptions
@@ -220,7 +224,9 @@ class SelfHostViewer:
         with tempfile.TemporaryDirectory() as tmp:
             out = Path(tmp) / "out.pdf"
             with self._open(creds, data) as v:
-                v.view(PdfViewOptions(str(out)))
+                # PdfViewOptions accepts a string template at runtime; the
+                # stubs only enumerate the stream-factory overload.
+                v.view(PdfViewOptions(str(out)))  # type: ignore[arg-type]
             return out.read_bytes()
 
     def _render_to_tmp(
@@ -241,6 +247,9 @@ class SelfHostViewer:
             tmp_path = Path(tmp)
             page_tpl = str(tmp_path / f"page_{{0}}.{ext}")
 
+            # Type as Any — opts is one of three options-class subtypes,
+            # and the library's stubs disagree across the constructors we use.
+            opts: Any
             if use_external:
                 # Resources land under <tmp>/page_<N>/<resource>; the URL
                 # template's {0}/{1} are substituted by groupdocs.viewer.
@@ -253,7 +262,9 @@ class SelfHostViewer:
             elif use_html:
                 opts = HtmlViewOptions.for_embedded_resources(page_tpl)
             else:
-                opts = PngViewOptions(page_tpl)
+                # Stubs only enumerate the stream-factory overload of PngViewOptions;
+                # the string-template form works at runtime.
+                opts = PngViewOptions(page_tpl)  # type: ignore[arg-type]
                 if kind == "thumb":
                     opts.width = self._thumb_width
 

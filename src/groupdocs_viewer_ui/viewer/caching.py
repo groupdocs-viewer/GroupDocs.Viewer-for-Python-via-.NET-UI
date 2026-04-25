@@ -8,7 +8,8 @@ warm requests are essentially free.
 from __future__ import annotations
 
 import json
-from collections.abc import Sequence
+from collections.abc import Awaitable, Callable, Sequence
+from typing import Protocol, TypeVar
 
 from groupdocs_viewer_ui.cache.keys import (
     FILE_INFO_CACHE_KEY,
@@ -26,6 +27,15 @@ from groupdocs_viewer_ui.viewer.entities import (
     Thumb,
 )
 from groupdocs_viewer_ui.viewer.protocol import Viewer
+
+
+class _Numbered(Protocol):
+    """Both Page and Thumb satisfy this — used to keep ``_batched_get`` generic."""
+
+    number: int
+
+
+_T = TypeVar("_T", bound=_Numbered)
 
 
 class CachingViewer:
@@ -117,9 +127,18 @@ class CachingViewer:
 
     # --- helpers ----------------------------------------------------------
 
-    async def _batched_get(self, creds, numbers, *, key_for, renderer, wrap, cache_after_render):
+    async def _batched_get(
+        self,
+        creds: FileCredentials,
+        numbers: list[int],
+        *,
+        key_for: Callable[[int], str],
+        renderer: Callable[[FileCredentials, Sequence[int]], Awaitable[list[_T]]],
+        wrap: Callable[[int, bytes], _T],
+        cache_after_render: Callable[[str, _T], Awaitable[None]],
+    ) -> list[_T]:
         # First pass: pull whatever's already cached.
-        results: dict[int, object] = {}
+        results: dict[int, _T] = {}
         missing: list[int] = []
         for n in numbers:
             cached = await self._cache.try_get(key_for(n), creds.file_path)

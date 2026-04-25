@@ -76,7 +76,8 @@ class S3FileStorage:
             resp = await s3.get_object(Bucket=self.bucket, Key=self._key(file_path))
             body = resp["Body"]
             try:
-                return await body.read()
+                # aioboto3 / botocore body objects return Any from read().
+                return await body.read()  # type: ignore[no-any-return]
             finally:
                 close = getattr(body, "close", None)
                 if close is not None:
