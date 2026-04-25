@@ -79,11 +79,13 @@ select = ["E", "F", "W", "I", "N", "UP", "B", "A", "C4", "SIM", "RUF"]
 ignore = ["E501"]
 
 [tool.ruff.lint.per-file-ignores]
-# Typer's CLI pattern requires `typer.Option(...)` and `Path.cwd()` as
-# argument defaults — that's the canonical usage from the Typer docs.
-# B008 ("function call in default") is incompatible with the framework
-# here, not a real bug.
-"src/groupdocs_viewer_ui/cli.py" = ["B008"]
+# cli.py:
+#   B008 — Typer's canonical pattern uses `typer.Option(...)` and `Path.cwd()`
+#          as argument defaults; the rule is incompatible with the framework.
+#   UP045 — Typer calls `typing.get_type_hints()` to introspect the signature,
+#          which fails on Python 3.9 for PEP-604 `X | None` syntax. Forced to
+#          stay on `Optional[X]` until the 3.9 floor moves.
+"src/groupdocs_viewer_ui/cli.py" = ["B008", "UP045"]
 
 [tool.mypy]
 python_version = "3.9"

@@ -3,6 +3,7 @@ from __future__ import annotations
 
 import sys
 from pathlib import Path
+from typing import Optional
 
 import typer
 import uvicorn
@@ -29,7 +30,11 @@ def serve(
         "-f",
         help="Directory containing documents to browse and view.",
     ),
-    cache: Path | None = typer.Option(
+    # Optional[Path] (not `Path | None`) because Typer calls
+    # ``typing.get_type_hints()`` to introspect the signature, and PEP-604
+    # union syntax fails to evaluate on Python 3.9. ``eval_type_backport``
+    # only patches pydantic, not typing in general.
+    cache: Optional[Path] = typer.Option(
         None,
         "--cache",
         "-c",

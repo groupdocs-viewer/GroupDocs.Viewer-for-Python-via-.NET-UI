@@ -66,10 +66,20 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y --no-install-recommends \
               libgdiplus \
+              libc6-dev \
               libfontconfig1 \
               fontconfig \
               fonts-dejavu \
               fonts-liberation
+          # Ubuntu installs libgdiplus as `libgdiplus.so.0` only — .NET's
+          # System.Drawing.Common dlopen()s `libgdiplus` (no version suffix)
+          # and fails with "Type initializer for 'Gdip' threw an exception"
+          # without this alias. Idempotent: the package may install the
+          # symlink directly on some releases.
+          if [ ! -e /usr/lib/x86_64-linux-gnu/libgdiplus.so ]; then
+            sudo ln -s /usr/lib/x86_64-linux-gnu/libgdiplus.so.0 \
+                       /usr/lib/x86_64-linux-gnu/libgdiplus.so
+          fi
 
       - run: pip install -e ".[dev]"
 

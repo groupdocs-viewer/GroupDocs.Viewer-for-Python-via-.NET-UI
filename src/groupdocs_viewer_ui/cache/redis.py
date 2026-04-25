@@ -37,13 +37,17 @@ class RedisCache:
                     "RedisCache needs redis-py — install with "
                     "`pip install groupdocs-viewer-net-ui[redis]`."
                 ) from exc
-            client = redis.from_url(url)  # type: ignore[no-untyped-call]
+            # redis-py types vary by version — pair the suppression with
+            # `unused-ignore` so this works whether or not the installed
+            # release exposes a typed `from_url`.
+            client = redis.from_url(url)  # type: ignore[no-untyped-call, unused-ignore]
         self._redis = client
         self._prefix = key_prefix
 
     async def try_get(self, cache_key: str, file_path: str) -> bytes | None:
-        # redis-py is fully untyped at runtime; .get returns Any.
-        return await self._redis.get(self._key(cache_key, file_path))  # type: ignore[no-any-return]
+        # Same cross-version dance as the constructor: .get() may or may
+        # not have a typed return depending on the installed redis-py.
+        return await self._redis.get(self._key(cache_key, file_path))  # type: ignore[no-any-return, unused-ignore]
 
     async def set(self, cache_key: str, file_path: str, data: bytes) -> None:
         await self._redis.set(self._key(cache_key, file_path), data)
