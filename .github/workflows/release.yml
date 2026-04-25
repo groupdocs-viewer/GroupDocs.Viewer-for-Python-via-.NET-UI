@@ -90,7 +90,9 @@ jobs:
   publish-pypi:
     name: Publish to PyPI
     needs: [build, test]
-    if: |
+    # Folded scalar (`>`) collapses the line breaks into spaces; literal `|`
+    # preserves them and has historically tripped GitHub's expression parser.
+    if: >
       github.event_name == 'release' ||
       (github.event_name == 'workflow_dispatch' && github.event.inputs.target == 'pypi')
     runs-on: ubuntu-latest
