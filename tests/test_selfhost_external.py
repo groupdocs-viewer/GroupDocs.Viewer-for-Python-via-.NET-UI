@@ -52,8 +52,8 @@ def test_external_mode_accepts_url_builder_factory(storage):
 
 def test_default_construction_keeps_embedded_html(storage):
     viewer = SelfHostViewer(storage=storage)
-    assert viewer._html_external_resources is False  # noqa: SLF001
-    assert viewer._resource_url_template_factory is None  # noqa: SLF001
+    assert viewer._html_external_resources is False
+    assert viewer._resource_url_template_factory is None
 
 
 @pytest.mark.asyncio

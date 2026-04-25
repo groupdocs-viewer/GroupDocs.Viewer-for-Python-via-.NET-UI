@@ -4,7 +4,6 @@ from groupdocs_viewer_ui.cache.memory import InMemoryCache
 from groupdocs_viewer_ui.viewer.caching import CachingViewer
 from groupdocs_viewer_ui.viewer.entities import FileCredentials
 
-
 CREDS = FileCredentials(file_path="/a.docx")
 
 

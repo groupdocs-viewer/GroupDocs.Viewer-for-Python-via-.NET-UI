@@ -10,11 +10,10 @@ import asyncio
 import hashlib
 import shutil
 from pathlib import Path
-from typing import Union
 
 
 class LocalFileCache:
-    def __init__(self, root: Union[str, Path]):
+    def __init__(self, root: str | Path):
         self.root = Path(root).resolve()
         self.root.mkdir(parents=True, exist_ok=True)
 

@@ -18,10 +18,10 @@ from starlette.testclient import TestClient
 
 pytest.importorskip("groupdocs.viewer")
 
-from groupdocs_viewer_ui import Config, create_app  # noqa: E402
-from groupdocs_viewer_ui.cache.memory import InMemoryCache  # noqa: E402
-from groupdocs_viewer_ui.storage.local import LocalFileStorage  # noqa: E402
-from groupdocs_viewer_ui.viewer.selfhost import SelfHostViewer  # noqa: E402
+from groupdocs_viewer_ui import Config, create_app
+from groupdocs_viewer_ui.cache.memory import InMemoryCache
+from groupdocs_viewer_ui.storage.local import LocalFileStorage
+from groupdocs_viewer_ui.viewer.selfhost import SelfHostViewer
 
 FIXTURES = Path(__file__).parent / "fixtures"
 SAMPLE_DOCX = FIXTURES / "sample.docx"

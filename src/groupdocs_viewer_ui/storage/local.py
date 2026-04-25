@@ -3,7 +3,6 @@ from __future__ import annotations
 
 import asyncio
 from pathlib import Path
-from typing import Union
 
 from groupdocs_viewer_ui.storage.protocol import FileSystemEntry
 
@@ -15,7 +14,7 @@ class LocalFileStorage:
     root (e.g. ``../etc/passwd``) raise ``PermissionError``.
     """
 
-    def __init__(self, root: Union[str, Path]):
+    def __init__(self, root: str | Path):
         self.root = Path(root).resolve()
         self.root.mkdir(parents=True, exist_ok=True)
 

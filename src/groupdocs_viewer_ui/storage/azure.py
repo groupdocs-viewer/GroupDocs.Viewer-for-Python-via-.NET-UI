@@ -6,9 +6,10 @@ without it.
 """
 from __future__ import annotations
 
+from collections.abc import AsyncIterator, Callable
 from contextlib import asynccontextmanager
 from pathlib import PurePosixPath
-from typing import Any, AsyncIterator, Callable, Optional
+from typing import Any
 
 from groupdocs_viewer_ui.storage.protocol import FileSystemEntry
 
@@ -26,7 +27,7 @@ class AzureBlobFileStorage:
         *,
         connection_string: str | None = None,
         prefix: str = "",
-        container_factory: Optional[Callable[[], Any]] = None,
+        container_factory: Callable[[], Any] | None = None,
     ):
         self.container = container
         self.prefix = prefix.strip("/")

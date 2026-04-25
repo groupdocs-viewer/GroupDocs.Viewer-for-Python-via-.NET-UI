@@ -18,9 +18,9 @@ from __future__ import annotations
 import asyncio
 import io
 import tempfile
-from collections.abc import Sequence
+from collections.abc import Callable, Sequence
 from pathlib import Path
-from typing import Callable, Literal, Optional
+from typing import Literal
 
 from groupdocs_viewer_ui.storage.protocol import FileStorage
 from groupdocs_viewer_ui.viewer.entities import (
@@ -58,7 +58,7 @@ class SelfHostViewer:
         storage: FileStorage,
         thumb_width: int = 300,
         html_external_resources: bool = False,
-        resource_url_template_factory: Optional[Callable[[str], str]] = None,
+        resource_url_template_factory: Callable[[str], str] | None = None,
     ):
         # Tolerant of casing — Config uses lowercase ("html"/"image") matching
         # the .NET RenderingMode.Value, but we still accept "Html"/"Image" so

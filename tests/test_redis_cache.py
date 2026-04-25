@@ -53,5 +53,5 @@ async def test_remove_drops_only_target_file(redis_cache):
 def test_construction_requires_client_or_url():
     from groupdocs_viewer_ui.cache.redis import RedisCache
 
-    with pytest.raises(ValueError, match="client.*url"):
+    with pytest.raises(ValueError, match=r"client.*url"):
         RedisCache()

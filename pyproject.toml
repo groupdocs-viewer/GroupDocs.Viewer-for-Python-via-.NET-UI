@@ -33,6 +33,11 @@ dependencies = [
   "typer>=0.12",
   "uvicorn>=0.29",
   "asgiref>=3.7",
+  # Required for the /upload-file endpoint — Starlette's request.form()
+  # raises at runtime without it. Not a dev-only dep.
+  "python-multipart>=0.0.9",
+  # Required for /upload-file's URL-fetch mode and used by the test client.
+  "httpx>=0.27",
 ]
 
 [project.optional-dependencies]
@@ -68,6 +73,13 @@ target-version = "py39"
 [tool.ruff.lint]
 select = ["E", "F", "W", "I", "N", "UP", "B", "A", "C4", "SIM", "RUF"]
 ignore = ["E501"]
+
+[tool.ruff.lint.per-file-ignores]
+# Typer's CLI pattern requires `typer.Option(...)` and `Path.cwd()` as
+# argument defaults — that's the canonical usage from the Typer docs.
+# B008 ("function call in default") is incompatible with the framework
+# here, not a real bug.
+"src/groupdocs_viewer_ui/cli.py" = ["B008"]
 
 [tool.mypy]
 python_version = "3.9"

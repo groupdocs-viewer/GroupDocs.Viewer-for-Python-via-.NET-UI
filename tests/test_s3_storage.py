@@ -12,7 +12,6 @@ import pytest
 
 from groupdocs_viewer_ui.storage.s3 import S3FileStorage
 
-
 # --- a tiny S3 fake -----------------------------------------------------------
 
 
@@ -190,7 +189,7 @@ def test_construction_without_factory_raises_helpful_error_when_aioboto3_missing
     monkeypatch.setitem(sys.modules, "aioboto3", None)
 
     async def go():
-        async with storage._client():  # noqa: SLF001
+        async with storage._client():
             pass
 
     import asyncio

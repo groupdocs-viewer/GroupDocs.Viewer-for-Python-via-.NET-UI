@@ -3,7 +3,6 @@ to fetch rendered pages, thumbs, PDFs, and HTML resources.
 """
 from __future__ import annotations
 
-from typing import Union
 from urllib.parse import quote, urlencode
 
 
@@ -58,7 +57,7 @@ class ApiUrlBuilder:
         return f"{api_prefix}/get-resource?file={encoded_file}&page={{0}}&resource={{1}}"
 
     def _build(
-        self, method_name: str, values: dict[str, Union[str, int]]
+        self, method_name: str, values: dict[str, str | int]
     ) -> str:
         qs = urlencode(values)
         if not self.use_absolute_urls:

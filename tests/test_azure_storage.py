@@ -7,7 +7,6 @@ import pytest
 
 from groupdocs_viewer_ui.storage.azure import AzureBlobFileStorage
 
-
 # --- a tiny Azure container fake ---------------------------------------------
 
 
@@ -31,7 +30,7 @@ class _DownloadStream:
 
 
 class _BlobClient:
-    def __init__(self, container: "_FakeContainer", name: str):
+    def __init__(self, container: _FakeContainer, name: str):
         self._container = container
         self._name = name
 
@@ -164,7 +163,7 @@ def test_construction_without_anything_raises():
     storage = AzureBlobFileStorage("c")
 
     async def go():
-        async with storage._container_cm():  # noqa: SLF001
+        async with storage._container_cm():
             pass
 
     import asyncio

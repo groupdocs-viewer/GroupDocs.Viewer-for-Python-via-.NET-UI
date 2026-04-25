@@ -5,9 +5,10 @@ Behind the ``[s3]`` extra (``pip install groupdocs-viewer-net-ui[s3]``).
 """
 from __future__ import annotations
 
+from collections.abc import AsyncIterator, Callable
 from contextlib import asynccontextmanager
 from pathlib import PurePosixPath
-from typing import Any, AsyncIterator, Callable, Optional
+from typing import Any
 
 from groupdocs_viewer_ui.storage.protocol import FileSystemEntry
 
@@ -26,7 +27,7 @@ class S3FileStorage:
         bucket: str,
         *,
         prefix: str = "",
-        client_factory: Optional[Callable[[], Any]] = None,
+        client_factory: Callable[[], Any] | None = None,
     ):
         self.bucket = bucket
         self.prefix = prefix.strip("/")

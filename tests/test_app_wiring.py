@@ -53,7 +53,11 @@ def test_spa_static_assets_served():
     with TestClient(create_app()) as client:
         response = client.get("/viewer/main.js")
         assert response.status_code == 200
-        assert response.headers["content-type"].startswith("application/javascript")
+        # Python 3.10's mimetypes returns "text/javascript" for .js while
+        # 3.12+ may return "application/javascript". Both are valid per
+        # RFC 9239 — assert the substring so the test isn't pinned to a
+        # specific Python release.
+        assert "javascript" in response.headers["content-type"]
 
 
 def test_custom_logo_image_path_serves_supplied_bytes(tmp_path: Path):
