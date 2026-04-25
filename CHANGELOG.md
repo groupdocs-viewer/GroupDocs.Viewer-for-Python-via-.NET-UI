@@ -4,6 +4,19 @@ All notable changes to `groupdocs-viewer-net-ui` are documented here. The format
 
 ## [Unreleased]
 
+## [26.4.0.post1] — 2026-04-25
+
+Post-release iteration of `26.4.0` shipped to TestPyPI for validation.
+
+### Changed
+
+- Bumped `Development Status` classifier from `4 - Beta` to `5 - Production/Stable` to reflect the 107-test suite + Docker e2e green pipeline.
+- Pinned `groupdocs-viewer-net>=26.4.0` to match the most recent released wheel of the underlying renderer (was `>=25.12`).
+
+### Notes
+
+- Post-releases (`26.4.0.post1`, `.post2`, ...) are how we iterate on TestPyPI without burning the next monthly version slot. PyPI ordering is `26.4.0 < 26.4.0.post1 < 26.4.0.post2 < 26.4.1 < 26.5.0`, so users always get the freshest release within each YY.MM.0 window. The base `YY.MM.0` version follows `groupdocs-viewer-net`'s monthly release cadence.
+
 ## [26.4.0] — 2026-04-25
 
 Initial public release. Feature-complete port of the [GroupDocs.Viewer for .NET UI](https://github.com/groupdocs-viewer/GroupDocs.Viewer-for-.NET-UI) to Python.
