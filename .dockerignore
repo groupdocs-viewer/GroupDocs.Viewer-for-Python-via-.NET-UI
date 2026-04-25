@@ -1,0 +1,35 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# Virtual envs
+.venv/
+venv/
+env/
+
+# Build outputs
+build/
+dist/
+
+# VCS / CI
+.git/
+.github/
+
+# Local data — host-side documents/caches mount in via docker-compose volumes,
+# never bake them into the image.
+documents/
+docs/
+cache/
+.viewer-cache/
+
+# Tests + examples — image runs the production CLI, not these.
+tests/
+examples/
+
+# Editor
+.idea/
+.vscode/

@@ -1,0 +1,13 @@
+services:
+  viewer:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./documents:/docs
+      - ./cache:/cache
+    environment:
+      - PYTHONUNBUFFERED=1
+    restart: unless-stopped

@@ -1,0 +1,5 @@
+/* Custom CSS overrides for the GroupDocs Viewer SPA chrome. */
+:root {
+  --c-bg-brand: #1e3a8a;
+  --c-bg-brand-hover: #1e293b;
+}

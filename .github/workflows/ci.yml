@@ -1,0 +1,78 @@
+name: CI
+
+on:
+  push:        # every branch — feature branches show results without needing a PR
+  pull_request:
+
+# Cancel in-progress runs for the same branch when a new commit arrives.
+# Always finish whatever's running on `main` though — useful as a release-readiness signal.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: ${{ github.ref != 'refs/heads/main' }}
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: pyproject.toml
+      - run: pip install -e ".[dev]"
+      - run: ruff check src tests
+      - run: mypy src
+
+  test:
+    name: Unit tests (${{ matrix.os }} / py${{ matrix.python-version }})
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        # Full Python matrix on Linux; latest stable only on Windows.
+        os: [ubuntu-latest]
+        python-version: ["3.9", "3.10", "3.11", "3.12", "3.13", "3.14"]
+        include:
+          - os: windows-latest
+            python-version: "3.12"
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+          cache: pip
+          cache-dependency-path: pyproject.toml
+      - run: pip install -e ".[dev]"
+      # The E2E suite needs Linux render libs and is covered by the dedicated
+      # `e2e` job below — skip it in the cross-Python matrix to keep this job
+      # focused on what the unit tests verify.
+      - run: pytest --ignore=tests/test_e2e.py
+
+  e2e:
+    name: E2E (real groupdocs.viewer rendering)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: pyproject.toml
+
+      - name: Install Linux render libraries
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends \
+              libgdiplus \
+              libfontconfig1 \
+              fontconfig \
+              fonts-dejavu \
+              fonts-liberation
+
+      - run: pip install -e ".[dev]"
+
+      # Real groupdocs.viewer renders a real DOCX through the full HTTP stack —
+      # verbose so failures pinpoint which endpoint regressed.
+      - run: pytest tests/test_e2e.py -v
