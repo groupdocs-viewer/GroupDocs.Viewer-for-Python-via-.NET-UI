@@ -43,7 +43,7 @@ cp tests/fixtures/sample.docx documents/
 # Add any of your own .docx / .pdf / .pptx / .xlsx files to ./documents/
 ```
 
-The viewer supports 170+ formats end-to-end — drop whatever you have.
+The viewer supports 190+ formats end-to-end — drop whatever you have.
 
 ## 4. Start the server
 

@@ -8,7 +8,7 @@
      docs/images/viewer-ui.jpg for repo-local viewing. -->
 ![GroupDocs.Viewer UI](https://raw.githubusercontent.com/groupdocs-viewer/groupdocs-viewer.github.io/master/resources/image/python-ui/viewer-ui.jpg)
 
-A web UI for [`groupdocs-viewer-net`](https://pypi.org/project/groupdocs-viewer-net/) — view 170+ document and image formats in a browser. Mount inside an existing FastAPI / Flask / Django app, or run standalone via the bundled CLI.
+A web UI for [`groupdocs-viewer-net`](https://pypi.org/project/groupdocs-viewer-net/) — view 190+ document and image formats in a browser. Mount inside an existing FastAPI / Flask / Django app, or run standalone via the bundled CLI.
 
 The frontend is the same battle-tested Angular SPA from the [GroupDocs.Viewer for .NET UI](https://github.com/groupdocs-viewer/GroupDocs.Viewer-for-.NET-UI) project, vendored into this package — one `pip install` and you're done.
 
@@ -121,6 +121,8 @@ For rate limiting, pair with [`slowapi`](https://github.com/laurentS/slowapi) or
 ```bash
 sudo apt-get install -y libgdiplus libfontconfig1 fontconfig fonts-liberation fonts-dejavu
 ```
+
+On Linux/macOS `groupdocs-viewer-net` runs on `GroupDocs.Viewer.CrossPlatform`, which renders every format **except** Project (MPP, MPT, MPX) and PSD — those are Windows-only. Everything else, including Visio, works on all platforms.
 
 ## Documentation
 
