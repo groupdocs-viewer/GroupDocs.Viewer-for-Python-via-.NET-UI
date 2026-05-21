@@ -1,5 +1,5 @@
 """Web UI for groupdocs-viewer-net."""
-__version__ = "26.4.0.post1"
+__version__ = "26.5.0"
 
 from groupdocs_viewer_ui.app import create_app
 from groupdocs_viewer_ui.config import Config, RenderingMode, ZoomLevel

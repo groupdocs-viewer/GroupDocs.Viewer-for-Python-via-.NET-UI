@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "groupdocs-viewer-net-ui"
-version = "26.4.0.post1"
+version = "26.5.0"
 description = "Web UI for groupdocs-viewer-net — mount into FastAPI/Flask/Django, or run standalone."
 readme = "README.md"
 requires-python = ">=3.9"
@@ -27,7 +27,7 @@ classifiers = [
   "Topic :: Office/Business",
 ]
 dependencies = [
-  "groupdocs-viewer-net>=26.4.0",
+  "groupdocs-viewer-net>=26.5.0",
   "starlette>=0.37",
   "pydantic>=2.0",
   "typer>=0.12",

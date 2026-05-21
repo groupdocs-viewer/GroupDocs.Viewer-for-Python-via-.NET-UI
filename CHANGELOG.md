@@ -4,6 +4,14 @@ All notable changes to `groupdocs-viewer-net-ui` are documented here. The format
 
 ## [Unreleased]
 
+## [26.5.0] — 2026-05-20
+
+First `YY.MM.0` release published directly to public PyPI, tracking the `groupdocs-viewer-net` 26.5.0 renderer.
+
+### Changed
+
+- Bumped the underlying renderer floor to `groupdocs-viewer-net>=26.5.0` (was `>=26.4.0`). On Linux/macOS that wheel builds on `GroupDocs.Viewer.CrossPlatform`, which renders every format except the **Project Management** (MPP, MPT, MPX) and **PSD** families — those remain Windows-only. Visio renders on all platforms.
+
 ## [26.4.0.post1] — 2026-04-25
 
 Post-release iteration of `26.4.0` shipped to TestPyPI for validation.
