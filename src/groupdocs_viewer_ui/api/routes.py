@@ -7,6 +7,7 @@ import urllib.parse
 from pathlib import Path
 
 import httpx
+from starlette.datastructures import UploadFile
 from starlette.requests import Request
 from starlette.responses import JSONResponse, PlainTextResponse, Response
 from starlette.routing import Route
@@ -112,7 +113,7 @@ def build_api_routes(
                 data = resp.content
             else:
                 upload = next(
-                    (v for v in form.values() if hasattr(v, "filename")),
+                    (v for v in form.values() if isinstance(v, UploadFile)),
                     None,
                 )
                 if upload is None:

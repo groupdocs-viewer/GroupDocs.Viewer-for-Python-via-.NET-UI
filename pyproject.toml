@@ -88,7 +88,10 @@ ignore = ["E501"]
 "src/groupdocs_viewer_ui/cli.py" = ["B008", "UP045"]
 
 [tool.mypy]
-python_version = "3.9"
+# mypy >=1.18 dropped 3.9 as a type-check target ("must be 3.10 or higher").
+# The package still supports 3.9 at runtime (requires-python >=3.9, tested in
+# CI); this only sets the version mypy assumes for stdlib/semantics.
+python_version = "3.10"
 strict = true
 ignore_missing_imports = true
 
