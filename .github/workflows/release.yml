@@ -59,7 +59,7 @@ jobs:
           python-version: "3.12"
       - run: pip install -e ".[dev]"
       # Skip the E2E tests in the release workflow — they need groupdocs-viewer-net
-      # (~193MB wheel) and CI already covers them. The publish path is gated on
+      # (~185MB wheel) and CI already covers them. The publish path is gated on
       # the rest of the suite passing.
       - run: pytest --ignore=tests/test_e2e.py
 

@@ -116,13 +116,15 @@ For rate limiting, pair with [`slowapi`](https://github.com/laurentS/slowapi) or
 
 ## Linux
 
-`groupdocs-viewer-net` needs `libgdiplus`, `libfontconfig1`, `fonts-liberation`, and `fonts-dejavu` for rendering. The bundled `Dockerfile` installs them; for bare metal:
+`groupdocs-viewer-net` needs fonts and `fontconfig` for rendering (no `libgdiplus` since 26.9). The bundled `Dockerfile` installs them; for bare metal:
 
 ```bash
-sudo apt-get install -y libgdiplus libfontconfig1 fontconfig fonts-liberation fonts-dejavu
+sudo apt-get install -y libfontconfig1 fontconfig fonts-liberation fonts-dejavu
+# MS Project (MPP/MPT/MPX) also needs the Microsoft core fonts (Debian: enable "contrib"):
+sudo apt-get install -y ttf-mscorefonts-installer
 ```
 
-On Linux/macOS `groupdocs-viewer-net` runs on `GroupDocs.Viewer.CrossPlatform`, which renders every format **except** Project (MPP, MPT, MPX) and PSD — those are Windows-only. Everything else, including Visio, works on all platforms.
+On Linux/macOS `groupdocs-viewer-net` runs the cross-platform build of the engine, which renders every format **except** Photoshop (PSD, PSB), Adobe Illustrator (AI) and OneNote — those are Windows-only. Everything else works on all platforms, including Visio and, since 26.9, Microsoft Project (MPP, MPT, MPX).
 
 ## Documentation
 

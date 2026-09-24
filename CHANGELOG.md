@@ -4,6 +4,20 @@ All notable changes to `groupdocs-viewer-net-ui` are documented here. The format
 
 ## [Unreleased]
 
+## [26.9.0] — 2026-09-24
+
+Tracks the `groupdocs-viewer-net` 26.9.0 renderer (GroupDocs.Viewer 26.8 engine).
+
+### Changed
+
+- Bumped the renderer floor to `groupdocs-viewer-net>=26.9.0` (was `>=26.5.0`). On Linux/macOS the renderer runs the cross-platform build of the engine, which renders every format except Photoshop (PSD, PSB), Adobe Illustrator (AI) and OneNote — those remain Windows-only. Microsoft Project (MPP, MPT, MPX) now renders on all platforms.
+- The Docker image installs the Microsoft core fonts (`ttf-mscorefonts-installer`, from Debian `contrib`). MS Project files now render on Linux, and without these fonts they fail with `Cannot find fallback font 'Generic Sans Serif'`.
+- Thumbnails are rendered at the configured `thumb_width` again (`PngViewOptions.width`) instead of at full page size. The workaround dated from the 26.4 renderer, whose Linux build resized through System.Drawing.Common; the resize has worked on every platform since 26.5, with or without `libgdiplus`.
+
+### Removed
+
+- `libgdiplus` — with the `libgdiplus.so` alias, `libc6-dev`, and the `DOTNET_SYSTEM_DRAWING_ENABLE_UNIX_SUPPORT` switch — from the Docker image, CI and the docs. The renderer does not need it.
+
 ## [26.5.0] — 2026-05-20
 
 First `YY.MM.0` release published directly to public PyPI, tracking the `groupdocs-viewer-net` 26.5.0 renderer.
@@ -57,5 +71,7 @@ Initial public release. Feature-complete port of the [GroupDocs.Viewer for .NET 
 - Optional cloud-SDK extras (`aioboto3`, `azure-storage-blob`, `redis`) are imported lazily — installing the package without extras keeps the dependency surface minimal.
 - The vendored SPA's HTTP contracts mirror the .NET project, so updates flow downstream — pull a new SPA build with `python scripts/sync_frontend.py`.
 
-[Unreleased]: https://github.com/groupdocs-viewer/GroupDocs.Viewer-for-Python-via-.NET-UI/compare/v26.4.0...HEAD
+[Unreleased]: https://github.com/groupdocs-viewer/GroupDocs.Viewer-for-Python-via-.NET-UI/compare/v26.9.0...HEAD
+[26.9.0]: https://github.com/groupdocs-viewer/GroupDocs.Viewer-for-Python-via-.NET-UI/compare/v26.5.0...v26.9.0
+[26.5.0]: https://github.com/groupdocs-viewer/GroupDocs.Viewer-for-Python-via-.NET-UI/compare/v26.4.0...v26.5.0
 [26.4.0]: https://github.com/groupdocs-viewer/GroupDocs.Viewer-for-Python-via-.NET-UI/releases/tag/v26.4.0

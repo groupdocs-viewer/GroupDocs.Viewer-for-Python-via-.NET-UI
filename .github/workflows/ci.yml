@@ -61,41 +61,21 @@ jobs:
           cache: pip
           cache-dependency-path: pyproject.toml
 
-      - name: Install Linux render libraries
+      # Fonts only. Since groupdocs-viewer-net 26.9 no render path needs
+      # libgdiplus (or the libgdiplus.so alias and the
+      # DOTNET_SYSTEM_DRAWING_ENABLE_UNIX_SUPPORT switch this job used to
+      # carry) -- measured in a container that has neither.
+      - name: Install Linux font libraries
         run: |
           sudo apt-get update
           sudo apt-get install -y --no-install-recommends \
-              libgdiplus \
-              libc6-dev \
               libfontconfig1 \
               fontconfig \
               fonts-dejavu \
               fonts-liberation
-          # Ubuntu installs libgdiplus as `libgdiplus.so.0` only — .NET's
-          # System.Drawing.Common dlopen()s `libgdiplus` (no version suffix)
-          # and fails with "Type initializer for 'Gdip' threw an exception"
-          # without this alias. Idempotent: the package may install the
-          # symlink directly on some releases.
-          if [ ! -e /usr/lib/x86_64-linux-gnu/libgdiplus.so ]; then
-            sudo ln -s /usr/lib/x86_64-linux-gnu/libgdiplus.so.0 \
-                       /usr/lib/x86_64-linux-gnu/libgdiplus.so
-          fi
-
-      - name: Verify libgdiplus install (diagnostic)
-        run: |
-          ls -la /usr/lib/x86_64-linux-gnu/libgdiplus* || true
-          ldconfig -p | grep -i gdiplus || echo "no gdiplus in ld cache"
 
       - run: pip install -e ".[dev]"
 
       # Real groupdocs.viewer renders a real DOCX through the full HTTP stack —
       # verbose so failures pinpoint which endpoint regressed.
-      #
-      # DOTNET_SYSTEM_DRAWING_ENABLE_UNIX_SUPPORT is REQUIRED on .NET 6+:
-      # System.Drawing.Common is Windows-only by default and refuses to load
-      # libgdiplus on Linux without this opt-in switch. Without it the install
-      # above is moot — Gdip's type initializer throws regardless of whether
-      # libgdiplus is dlopen-able. See https://aka.ms/systemdrawingnonwindows
       - run: pytest tests/test_e2e.py -v
-        env:
-          DOTNET_SYSTEM_DRAWING_ENABLE_UNIX_SUPPORT: "true"

@@ -6,8 +6,8 @@ A step-by-step for spinning up the viewer end-to-end on your machine — useful 
 
 - Python 3.9 – 3.14
 - `git` (for cloning)
-- On **Linux**: `libgdiplus`, `libfontconfig1`, `fonts-liberation`, `fonts-dejavu` system packages (the bundled `Dockerfile` lists the apt commands)
-- On **macOS**: `brew install mono-libgdiplus`
+- On **Linux**: `libfontconfig1`, `fontconfig`, `fonts-liberation`, `fonts-dejavu` system packages, plus `ttf-mscorefonts-installer` for MS Project files (the bundled `Dockerfile` lists the apt commands); no `libgdiplus` since 26.9
+- On **macOS**: nothing extra since 26.9 (older releases asked for `brew install mono-libgdiplus`)
 - On **Windows**: nothing extra — `groupdocs-viewer-net` ships everything it needs
 
 ## 1. Clone and install
@@ -22,13 +22,13 @@ source .venv/bin/activate     # on Windows: .venv\Scripts\activate
 pip install -e ".[dev]"
 ```
 
-This pulls `groupdocs-viewer-net` (~193 MB wheel — first install is slow), Starlette, pydantic, uvicorn, and the dev tooling (pytest, ruff, mypy, fakeredis).
+This pulls `groupdocs-viewer-net` (~185 MB wheel — first install is slow), Starlette, pydantic, uvicorn, and the dev tooling (pytest, ruff, mypy, fakeredis).
 
 ## 2. Verify the install
 
 ```bash
 pytest                                    # 107 passing, ~21s
-groupdocs-viewer-ui version               # → 26.4.0
+groupdocs-viewer-ui version               # → 26.9.0
 ```
 
 If `pytest` complains about `groupdocs-viewer-net` symbols on Linux, double-check the system libraries from the Prerequisites section above.
@@ -54,7 +54,7 @@ groupdocs-viewer-ui serve --files ./documents --cache ./.viewer-cache
 Output:
 
 ```
-groupdocs-viewer-ui 26.4.0
+groupdocs-viewer-ui 26.9.0
   files:  /path/to/documents
   cache:  /path/to/.viewer-cache
   SPA:    http://127.0.0.1:8080/viewer/

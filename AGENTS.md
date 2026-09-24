@@ -473,7 +473,7 @@ services:
               "--rendering-mode", "image"]
 ```
 
-First build is slow (~5–10 min) because `groupdocs-viewer-net` is a ~193 MB wheel. Subsequent builds reuse the cached layer.
+First build is slow (~5–10 min) because `groupdocs-viewer-net` is a ~185 MB wheel. Subsequent builds reuse the cached layer.
 
 ## Custom branding
 
@@ -523,13 +523,14 @@ If you ever refactor this and think "the framework can handle this exception" �
 
 ### `groupdocs-viewer-net` Linux dependencies
 
-On Linux, `groupdocs-viewer-net` needs system libraries for image rendering. The bundled `Dockerfile` installs them; bare-metal Linux users need:
+On Linux, `groupdocs-viewer-net` needs fonts and `fontconfig` (no `libgdiplus` since 26.9). The bundled `Dockerfile` installs them; bare-metal Linux users need:
 
 ```bash
-sudo apt-get install -y libgdiplus libfontconfig1 fontconfig fonts-liberation fonts-dejavu
+sudo apt-get install -y libfontconfig1 fontconfig fonts-liberation fonts-dejavu
+sudo apt-get install -y ttf-mscorefonts-installer   # needed for MS Project (MPP/MPT/MPX)
 ```
 
-Without these, rendering succeeds for some formats but fails (sometimes silently) for others — usually anything that needs font metrics.
+MS Project files fail with `Cannot find fallback font 'Generic Sans Serif'` unless the Microsoft core fonts are installed; Liberation does not satisfy that lookup. Without fonts, rendering succeeds for some formats but fails (sometimes silently) for others — usually anything that needs font metrics.
 
 ### `static_content_mode` is reserved
 
